@@ -1,18 +1,19 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
-using WebShop.Models;
+using WebShop.DAL.Models;
+using WebShop.DAL.Services;
 
 namespace WebShop.Controllers
 {
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
-        private AuthRepository _repo;
+        private readonly AuthService _repo;
 
         public AccountController()
         {
-            _repo = new AuthRepository();
+            _repo = new AuthService();
         }
 
         // POST api/Account/Register

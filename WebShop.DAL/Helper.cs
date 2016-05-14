@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace WebShop
+namespace WebShop.DAL
 {
     public class Helper
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebShop.Entities
+namespace WebShop.DAL.Models
 {
     public class RefreshToken
     {

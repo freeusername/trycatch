@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebShop.Models
+namespace WebShop.DAL.Models
 {
     public class UserModel
     {

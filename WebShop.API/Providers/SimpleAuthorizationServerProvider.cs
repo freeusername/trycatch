@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
-using WebShop.Entities;
+using WebShop.DAL;
+using WebShop.DAL.Models;
+using WebShop.DAL.Services;
 
 namespace WebShop.Providers
 {
@@ -29,7 +31,7 @@ namespace WebShop.Providers
                 return Task.FromResult<object>(null);
             }
 
-            using (AuthRepository _repo = new AuthRepository())
+            using (AuthService _repo = new AuthService())
             {
                 client = _repo.FindClient(context.ClientId);
             }
@@ -40,7 +42,7 @@ namespace WebShop.Providers
                 return Task.FromResult<object>(null);
             }
 
-            if (client.ApplicationType == Models.ApplicationTypes.WPF)
+            if (client.ApplicationType == ApplicationTypes.WPF)
             {
                 if (string.IsNullOrWhiteSpace(clientSecret))
                 {
@@ -79,7 +81,7 @@ namespace WebShop.Providers
 
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
-            using (AuthRepository _repo = new AuthRepository())
+            using (AuthService _repo = new AuthService())
             {
                 IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
 

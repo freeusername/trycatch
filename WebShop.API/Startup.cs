@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
+using Unity.WebApi;
 using WebShop;
 using WebShop.Providers;
 
@@ -19,7 +20,11 @@ namespace WebShop
 
         public void Configuration(IAppBuilder app)
         {
-            HttpConfiguration config = new HttpConfiguration();
+            var container = UnityConfig.RegisterComponents();
+            HttpConfiguration config = new HttpConfiguration
+            {
+                DependencyResolver = new UnityDependencyResolver(container)
+            };
 
             ConfigureOAuth(app);
 
@@ -35,11 +40,12 @@ namespace WebShop
             app.UseExternalSignInCookie(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ExternalCookie);
             OAuthBearerOptions = new OAuthBearerAuthenticationOptions();
 
-            OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions() {
-            
+            OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
+            {
+
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
+                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(15),
                 Provider = new SimpleAuthorizationServerProvider()
             };
 

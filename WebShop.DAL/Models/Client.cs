@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WebShop.Models;
 
-namespace WebShop.Entities
+namespace WebShop.DAL.Models
 {
     public class Client
     {
