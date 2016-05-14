@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -55,9 +57,13 @@ namespace WebShop.Mvc.Controllers
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                //TODO save to cookie
-                var t = response.Data.Access_Token;
-                FormsAuthentication.SetAuthCookie(model.Email, true);
+                //TODO
+                var token = response.Data.Access_Token;
+                System.Web.HttpContext.Current.Session["token"] = token;
+                System.Web.HttpContext.Current.Session.Timeout = 15;
+                FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
+
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -105,6 +111,9 @@ namespace WebShop.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            FormsAuthentication.SignOut();
+            System.Web.HttpContext.Current.Session["token"] = null;
+
             return RedirectToAction("Index", "Home");
         }
 
