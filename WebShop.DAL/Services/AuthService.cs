@@ -1,20 +1,22 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WebShop.DAL.Models;
+using WebShop.DAL.Repositories;
 
 namespace WebShop.DAL.Services
 {
-    public class AuthService : IDisposable
+    public class AuthService
     {
-        private readonly AuthContext _ctx;
+        private readonly IClientRepository _clientRepository;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public AuthService()
+        public AuthService(IClientRepository clientRepository, UserManager<IdentityUser> userManager)
         {
-            _ctx = new AuthContext();
-            _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_ctx));
+            _clientRepository = clientRepository;
+            _userManager = userManager;
+            //_userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_ctx));
         }
 
         public async Task<IdentityResult> RegisterUser(UserModel userModel)
@@ -31,22 +33,17 @@ namespace WebShop.DAL.Services
 
         public async Task<IdentityUser> FindUser(string userName, string password)
         {
-            IdentityUser user = await _userManager.FindAsync(userName, password);
+            var user = await _userManager.FindAsync(userName, password);
 
             return user;
         }
 
         public Client FindClient(string clientId)
         {
-            var client = _ctx.Clients.Find(clientId);
+            var client = _clientRepository.GetAll()
+                .SingleOrDefault(o => o.Id == clientId);
 
             return client;
-        }
-        
-        public void Dispose()
-        {
-            _ctx.Dispose();
-            _userManager.Dispose();
         }
     }
 }

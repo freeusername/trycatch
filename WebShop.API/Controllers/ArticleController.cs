@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Web.Http;
-using System.Web.Routing;
-using WebShop.DAL.Models;
 using WebShop.DAL.Services;
 
 namespace WebShop.Controllers
@@ -21,6 +19,13 @@ namespace WebShop.Controllers
         public IHttpActionResult Get()
         {
             var articles = _articlesService.GetAll();
+            return Ok(articles);
+        }
+
+        [Route("")]
+        public IHttpActionResult Get(Guid id)
+        {
+            var articles = _articlesService.GetById(id);
             return Ok(articles);
         }
     }

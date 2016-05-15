@@ -9,11 +9,11 @@ namespace WebShop.Controllers
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
-        private readonly AuthService _repo;
+        private readonly AuthService _authService;
 
-        public AccountController()
+        public AccountController(AuthService authService)
         {
-            _repo = new AuthService();
+            _authService = authService;
         }
 
         // POST api/Account/Register
@@ -26,7 +26,7 @@ namespace WebShop.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await _repo.RegisterUser(userModel);
+            IdentityResult result = await _authService.RegisterUser(userModel);
 
             IHttpActionResult errorResult = GetErrorResult(result);
 

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using WebShop.DAL.Models;
 using WebShop.DAL.Repositories;
 
@@ -16,6 +18,12 @@ namespace WebShop.DAL.Services
         public IEnumerable<Article> GetAll()
         {
             return _repository.GetAll();
+        }
+
+        public Article GetById(Guid id)
+        {
+            return _repository.GetAll()
+                .SingleOrDefault(o => o.Id == id);
         }
     }
 }

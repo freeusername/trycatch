@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
 using WebShop.DAL;
@@ -13,6 +12,13 @@ namespace WebShop.Providers
 {
     public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
+        private readonly AuthService _service;
+
+        public SimpleAuthorizationServerProvider(AuthService service)
+        {
+            _service = service;
+        }
+
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
 
@@ -31,10 +37,7 @@ namespace WebShop.Providers
                 return Task.FromResult<object>(null);
             }
 
-            using (AuthService _repo = new AuthService())
-            {
-                client = _repo.FindClient(context.ClientId);
-            }
+            client = _service.FindClient(context.ClientId);
 
             if (client == null)
             {
@@ -77,19 +80,17 @@ namespace WebShop.Providers
 
             var allowedOrigin = context.OwinContext.Get<string>("as:clientAllowedOrigin");
 
-            if (allowedOrigin == null) allowedOrigin = "*";
+            if (allowedOrigin == null)
+                allowedOrigin = "*";
 
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
-            using (AuthService _repo = new AuthService())
-            {
-                IdentityUser user = await _repo.FindUser(context.UserName, context.Password);
+            var user = await _service.FindUser(context.UserName, context.Password);
 
-                if (user == null)
-                {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
-                }
+            if (user == null)
+            {
+                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
             }
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
@@ -99,10 +100,10 @@ namespace WebShop.Providers
 
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {
-                    { 
+                    {
                         "as:client_id", (context.ClientId == null) ? string.Empty : context.ClientId
                     },
-                    { 
+                    {
                         "userName", context.UserName
                     }
                 });
@@ -125,7 +126,7 @@ namespace WebShop.Providers
 
             // Change auth ticket for refresh token requests
             var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
-            
+
             var newClaim = newIdentity.Claims.Where(c => c.Type == "newClaim").FirstOrDefault();
             if (newClaim != null)
             {

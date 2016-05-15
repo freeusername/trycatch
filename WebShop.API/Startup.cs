@@ -26,7 +26,8 @@ namespace WebShop
                 DependencyResolver = new UnityDependencyResolver(container)
             };
 
-            ConfigureOAuth(app);
+            var simpleAuthorizationServerProvider = (SimpleAuthorizationServerProvider)container.Resolve(typeof(SimpleAuthorizationServerProvider), string.Empty);//new SimpleAuthorizationServerProvider();
+            ConfigureOAuth(app, simpleAuthorizationServerProvider);
 
             WebApiConfig.Register(config);
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
@@ -35,7 +36,7 @@ namespace WebShop
             // Database.SetInitializer(new MigrateDatabaseToLatestVersion<AuthContext, Configuration>());
         }
 
-        public void ConfigureOAuth(IAppBuilder app)
+        public void ConfigureOAuth(IAppBuilder app, SimpleAuthorizationServerProvider authServerProvider)
         {
             app.UseExternalSignInCookie(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ExternalCookie);
             OAuthBearerOptions = new OAuthBearerAuthenticationOptions();
@@ -46,7 +47,7 @@ namespace WebShop
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
                 AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(15),
-                Provider = new SimpleAuthorizationServerProvider()
+                Provider = authServerProvider
             };
 
             app.UseOAuthAuthorizationServer(OAuthServerOptions); //askp
