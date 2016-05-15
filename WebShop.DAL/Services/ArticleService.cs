@@ -21,6 +21,13 @@ namespace WebShop.DAL.Services
             return _repository.GetAll();
         }
 
+        public IEnumerable<Article> GetArticles(Guid[] ids)
+        {
+            return _repository.GetAll()
+                .ToList() // TODO don't load everything into memory
+                .Where(o => ids.Contains(o.Id));
+        }
+
         public Article GetById(Guid id)
         {
             return _repository.GetAll()
@@ -32,6 +39,7 @@ namespace WebShop.DAL.Services
             var all = _repository.GetAll();
 
             var articles = all
+                .OrderBy(o => o.Name)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize);
 

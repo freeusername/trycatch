@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
+using WebShop.Mvc.Helpers;
 
 namespace WebShop.Mvc
 {
@@ -7,7 +10,11 @@ namespace WebShop.Mvc
     {
         public override void OnResultExecuting(ResultExecutingContext filterContext)
         {
-            filterContext.Controller.ViewBag.CartCount = HttpContext.Current.Session.Keys.Count;
+            var cartValue = HttpContext.Current.Session[SessionHelper.ArticlesKeyName] as List<Guid>;
+
+            filterContext.Controller.ViewBag.CartCount = cartValue != null
+                ? cartValue.Count
+                : 0;
         }
     }
 }

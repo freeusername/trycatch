@@ -33,7 +33,7 @@ namespace WebShop
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
             app.UseWebApi(config);
 
-            // Database.SetInitializer(new MigrateDatabaseToLatestVersion<AuthContext, Configuration>());
+            // Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataBaseContext, Configuration>());
         }
 
         public void ConfigureOAuth(IAppBuilder app, SimpleAuthorizationServerProvider authServerProvider)

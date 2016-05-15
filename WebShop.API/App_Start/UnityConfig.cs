@@ -18,7 +18,7 @@ namespace WebShop
             var container = new UnityContainer();
 
             // Contexts
-            container.RegisterType<IDatabaseContext, AuthContext>(new PerThreadLifetimeManager());
+            container.RegisterType<IDatabaseContext, DataBaseContext>(new PerThreadLifetimeManager());
 
             // Repositories
             container.RegisterType<IArticleRepository, ArticleRepository>();

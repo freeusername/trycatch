@@ -28,6 +28,7 @@ namespace WebShop.Mvc.Controllers
                 });
             }
 
+            // TODO
             throw new Exception("Smth went wrong");
         }
     }

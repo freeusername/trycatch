@@ -4,16 +4,17 @@ using WebShop.DAL.Models;
 
 namespace WebShop.DAL
 {
-    public class AuthContext : IdentityDbContext<IdentityUser>, IDatabaseContext
+    public class DataBaseContext : IdentityDbContext<IdentityUser>, IDatabaseContext
     {
-        public AuthContext()
-            : base("AuthContext")
+        public DataBaseContext()
+            : base("DataBaseContext")
         {
             Database.SetInitializer(new DatabaseInitializer());
         }
 
         public IDbSet<Client> Clients { get; set; }
         public IDbSet<RefreshToken> RefreshTokens { get; set; }
+        public IDbSet<Article> Articles { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -27,12 +28,15 @@ namespace WebShop.DAL
 
             modelBuilder.Entity<Client>().ToTable("auth.Clients");
             modelBuilder.Entity<RefreshToken>().ToTable("auth.RefreshTokens");
+
+            modelBuilder.Entity<Article>().ToTable("data.Articles");
         }
     }
 
     public interface IDatabaseContext
     {
         IDbSet<Client> Clients { get; set; }
+        IDbSet<Article> Articles { get; set; }
         IDbSet<RefreshToken> RefreshTokens { get; set; }
         int SaveChanges();
     }

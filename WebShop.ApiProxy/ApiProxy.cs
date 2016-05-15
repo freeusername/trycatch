@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RestSharp;
@@ -11,7 +12,8 @@ namespace WebShop.ApiProxy
     {
         private const string GetTokenUrl = "Token";
         private const string AccountRegisterUrl = "api/Account/Register";
-        private const string GetArticlesUrl = "api/Articles/{0}/{1}"; // 0 - pageNumber, 1- pageSize
+        private const string PagedArticlesUrl = "api/Articles/{0}/{1}"; // 0 - pageNumber, 1- pageSize
+        private const string AllArticlesUrl = "api/Articles";
 
         private readonly RestClient _authClient;
 
@@ -46,12 +48,23 @@ namespace WebShop.ApiProxy
 
         public ICustomHttpResult<ArticlePagedData> GetArticles(int page, int pageSize)
         {
-            var url = string.Format(GetArticlesUrl, page, pageSize);
+            var url = string.Format(PagedArticlesUrl, page, pageSize);
             var request = new RestRequest(url, Method.GET);
 
             var response = _authClient.Execute<ArticlePagedData>(request);
 
             return new CustomHttpResult<ArticlePagedData>(response);
+        }
+
+        public ICustomHttpResult<IEnumerable<Article>> GetArticles(Guid[] articleIds)
+        {
+            var request = new RestRequest(AllArticlesUrl, Method.GET);
+            foreach (var id in articleIds)
+                request.AddParameter("ids", id);
+
+            var response = _authClient.Execute<List<Article>>(request);
+
+            return new CustomHttpResult<List<Article>>(response);
         }
     }
 }
