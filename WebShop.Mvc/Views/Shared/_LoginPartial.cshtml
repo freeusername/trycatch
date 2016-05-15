@@ -6,16 +6,28 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+            <li id="cart-id">
+                <a id="shopping-cart" href="@Url.Action("Index", "ShoppingCart")">
+                    Cart <span id="cart-count-id" class="badge">@ViewBag.CartCount</span>
+                </a>
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li>
+                <a href="#">Hello @User.Identity.GetUserName()</a>
+            </li>
+            <li>
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+            </li>
         </ul>
     }
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
+        <li id="cart-id">
+            <a id="shopping-cart" href="@Url.Action("Index", "ShoppingCart")">
+                Cart <span id="cart-count-id" class="badge">@ViewBag.CartCount</span>
+            </a>
+        </li>
         @if (!Request.IsAuthenticated)
         {
             <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>

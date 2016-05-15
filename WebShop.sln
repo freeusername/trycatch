@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.DTO", "WebShop.DTO\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.DAL", "WebShop.DAL\WebShop.DAL.csproj", "{B60B01FF-87D7-43DE-BF50-457E5B400A6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebShop.ApiProxy", "WebShop.ApiProxy\WebShop.ApiProxy.csproj", "{5A20BCA1-B1A8-4D04-BEA3-1673CE5CAE0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B60B01FF-87D7-43DE-BF50-457E5B400A6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B60B01FF-87D7-43DE-BF50-457E5B400A6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B60B01FF-87D7-43DE-BF50-457E5B400A6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A20BCA1-B1A8-4D04-BEA3-1673CE5CAE0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A20BCA1-B1A8-4D04-BEA3-1673CE5CAE0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A20BCA1-B1A8-4D04-BEA3-1673CE5CAE0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A20BCA1-B1A8-4D04-BEA3-1673CE5CAE0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

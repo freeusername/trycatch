@@ -1,34 +1,27 @@
 ﻿using System.Net;
-using System.Security.Principal;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Security;
-using RestSharp;
-using RestSharp.Extensions;
-using WebShop.DTO;
+using WebShop.ApiProxy;
+using WebShop.DTO.Model;
 using WebShop.Mvc.Models;
 
 namespace WebShop.Mvc.Controllers
 {
-    [System.Web.Mvc.Authorize]
+    [Authorize]
     public class AccountController : Controller
     {
+        private readonly IApiProxy _apiProxy;
         private const string XsrfKey = "XsrfId";
-        private readonly RestClient _authClient;
 
-        public AccountController()
+        public AccountController(IApiProxy apiProxy)
         {
-            var authServerUrl = System.Configuration.ConfigurationManager.AppSettings["authApiUrl"];
-
-            // TODO move this logic out of here
-            _authClient = new RestClient(authServerUrl);
+            _apiProxy = apiProxy;
         }
 
         //
         // GET: /Account/Login
-        [System.Web.Mvc.AllowAnonymous]
+        [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -37,8 +30,8 @@ namespace WebShop.Mvc.Controllers
 
         //
         // POST: /Account/Login
-        [System.Web.Mvc.HttpPost]
-        [System.Web.Mvc.AllowAnonymous]
+        [HttpPost]
+        [AllowAnonymous]
         //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
@@ -47,18 +40,12 @@ namespace WebShop.Mvc.Controllers
                 return View(model);
             }
 
-            var request = new RestRequest("Token", Method.POST);
-
-            request.AddParameter("grant_type", "password");
-            request.AddParameter("username", model.Email);
-            request.AddParameter("password", model.Password);
-
-            var response = _authClient.Execute<TokenDTO>(request);
+            var response = _apiProxy.RequestToken(model.Email, model.Password);
 
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                //TODO
                 var token = response.Data.Access_Token;
+
                 System.Web.HttpContext.Current.Session["token"] = token;
                 System.Web.HttpContext.Current.Session.Timeout = 15;
                 FormsAuthentication.SetAuthCookie(model.Email, model.RememberMe);
@@ -82,21 +69,14 @@ namespace WebShop.Mvc.Controllers
 
         //
         // POST: /Account/Register
-        [System.Web.Mvc.HttpPost]
-        [System.Web.Mvc.AllowAnonymous]
+        [HttpPost]
+        [AllowAnonymous]
         public ActionResult Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var request = new RestRequest("api/Account/Register", Method.POST);
-                request.AddObject(new
-                {
-                    UserName = model.Email,
-                    Password = model.Password,
-                    ConfirmPassword = model.ConfirmPassword
-                });
-
-                var response = _authClient.Execute<object>(request);
+                var registerModel = AutoMapper.Mapper.Map<RegisterViewModel, RegisterModel>(model);
+                var response = _apiProxy.Register(registerModel);
 
                 if (response.StatusCode == HttpStatusCode.OK)
                     return RedirectToAction("Index", "Home");
@@ -107,7 +87,7 @@ namespace WebShop.Mvc.Controllers
 
         //
         // POST: /Account/LogOff
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
@@ -116,18 +96,5 @@ namespace WebShop.Mvc.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
-        #region Helpers
-
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
-        #endregion
     }
 }

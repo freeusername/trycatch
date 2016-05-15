@@ -14,11 +14,18 @@ namespace WebShop.Controllers
             _articlesService = articlesService;
         }
 
-        //[Authorize]
+        // TODO [Authorize]
         [Route("")]
         public IHttpActionResult Get()
         {
             var articles = _articlesService.GetAll();
+            return Ok(articles);
+        }
+
+        [Route("{page}/{pageSize}")]
+        public IHttpActionResult GetPagedData(int page, int pageSize)
+        {
+            var articles = _articlesService.GetPaged(page, pageSize);
             return Ok(articles);
         }
 
