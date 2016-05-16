@@ -5,8 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
 <div class="container">
     <h2>ShoppingCart</h2>
     <table class="table table-striped">
@@ -20,33 +18,32 @@
         <tbody>
             @foreach (var item in @Model)
             {
-                <tr>
+                var vat = @item.PriceExclVat * 0.2M;
+                var priceInclVat = @item.PriceExclVat * 1.2M;  /*TODO move VAT calc logic out of here*/
+                <tr onclick="showPopup('@item.Name', '@item.Description', '@item.PriceExclVat.ToString("C")', '@vat.ToString("C")', '@priceInclVat.ToString("C")');">
                     <td>@item.Name</td>
                     <td>@item.PriceExclVat.ToString("C")</td>
-                    @{
-                        var price = @item.PriceExclVat * 1.2M;
-                        <td>@price.ToString("C")</td> @*TODO move VAT calc logic out of here*@
-                    }
+                    <td>@priceInclVat.ToString("C")</td>
                 </tr>
-                        }
+            }
         </tbody>
     </table>
 
     <h2>Summary</h2>
     <div class="row">
-        <div class="col-sm-2">SubTotal Excl VAT</div>
+        <p class="col-sm-2">SubTotal Excl VAT</p>
         <div class="col-sm-2">
             @Model.Sum(o => o.PriceExclVat).ToString("C")
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2">Total VAT</div>
+        <p class="col-sm-2">Total VAT</p>
         <div class="col-sm-2">
             @Model.Sum(o => o.PriceExclVat * 0.2M).ToString("C") @*TODO move VAT calc logic out of here*@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2">SubTotal Incl VAT</div>
+        <p class="col-sm-2">SubTotal Incl VAT</p>
         <div class="col-sm-2">
             @Model.Sum(o => o.PriceExclVat * 1.2M).ToString("C") @*TODO move VAT calc logic out of here*@
         </div>
@@ -58,3 +55,41 @@
         </div>
     </div>
 </div>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Article details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <p class="col-sm-3">Name</p>
+                    <div class="content-name col-sm-5"></div>
+                </div>
+                <div class="row">
+                    <p class="col-sm-3">Description</p>
+                    <div class="content-description col-sm-5"></div>
+                </div>
+                <div class="row">
+                    <p class="col-sm-3">Price Excl. VAT</p>
+                    <div class="content-price-excl-vat col-sm-5"></div>
+                </div>
+                <div class="row">
+                    <p class="col-sm-3">VAT</p>
+                    <div class="content-vat col-sm-5"></div>
+                </div>
+                <div class="row">
+                    <p class="col-sm-3">Price Incl. VAT</p>
+                    <div class="content-price-incl-vat col-sm-5"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/custom/popupHelper.js"></script>

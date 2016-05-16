@@ -43,7 +43,7 @@ namespace WebShop.Mvc.Controllers
 
             var idsList = Session[SessionHelper.ArticlesKeyName] as List<Guid>;
             if (idsList == null)
-                throw new Exception("Smth  went wrong"); //TODO
+                throw new Exception("Smth went wrong"); //TODO
 
             if (!idsList.Contains(id))
                 idsList.Add(id);
