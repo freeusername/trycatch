@@ -2,17 +2,13 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using WebShop.WPF.Annotations;
 
 namespace WebShop.WPF.ViewModels
 {
-    public class BaseViewModel : IDataErrorInfo, INotifyPropertyChanged
+    public class BaseViewModel : NotifyPropertyObject, IDataErrorInfo
     {
         protected IDictionary<string, string> _errors = new Dictionary<string, string>();
         protected bool _validated;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string this[string columnName]
         {
@@ -44,11 +40,5 @@ namespace WebShop.WPF.ViewModels
         }
 
         public string Error { get; }
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

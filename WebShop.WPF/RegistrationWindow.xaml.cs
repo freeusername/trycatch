@@ -27,9 +27,4 @@ namespace WebShop.WPF
             this.Close();
         }
     }
-
-    public interface IRegistrationWindow
-    {
-        void Show();
-    }
 }

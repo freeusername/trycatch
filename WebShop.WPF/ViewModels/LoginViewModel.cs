@@ -4,6 +4,7 @@ using WebShop.WPF.Commands;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Windows;
 using WebShop.ApiProxy;
 
@@ -52,6 +53,8 @@ namespace WebShop.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public string Token { get; private set; }
         
         #endregion
 
@@ -74,10 +77,13 @@ namespace WebShop.WPF.ViewModels
                     var response = _apiProxy.RequestToken(_email, _password);
 
                     if (response.StatusCode != HttpStatusCode.OK)
+                    {
                         MessageBox.Show("no errors!");
+                    }
                     else
                     {
                         MessageBox.Show("Successfully logged in");
+                        Token = response.Data.Access_Token; 
                         OnSuccessfullLogin();
                     }
                 }
@@ -90,9 +96,5 @@ namespace WebShop.WPF.ViewModels
             if (handler != null)
                 handler(this, null);
         }
-    }
-
-    public interface ILoginViewModel
-    {
     }
 }

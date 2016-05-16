@@ -215,8 +215,4 @@ namespace WebShop.WPF.ViewModels
                 handler(this, null);
         }
     }
-
-    public interface IRegistrationViewModel
-    {
-    }
 }

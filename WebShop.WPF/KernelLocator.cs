@@ -19,7 +19,9 @@ namespace WebShop.WPF
             Container.Bind<IRegistrationViewModel>().To<RegistrationViewModel>();
             Container.Bind<ILoginWindow>().To<LoginWindow>();
             Container.Bind<ILoginViewModel>().To<LoginViewModel>();
-            Container.Bind<IMainViewModel>().To<MainViewModel>(); 
+            Container.Bind<ICartWindow>().To<Cart>();
+            Container.Bind<ICartViewModel>().To<CartViewModel>().InSingletonScope();
+            Container.Bind<IMainViewModel>().To<MainViewModel>().InSingletonScope(); 
         }
     }
 }

@@ -1,16 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Ninject;
 using WebShop.WPF.ViewModels;
 
@@ -31,16 +20,15 @@ namespace WebShop.WPF
             InitializeComponent();
             DataContext = KernelLocator.Container.Get<ILoginViewModel>();
             ViewModel.OnSuccessfullLoginEvent += OnSuccessfullLoginEvent;
+
+            var mainViewModel = KernelLocator.Container.Get<IMainViewModel>() as MainViewModel;
+            if (mainViewModel != null)
+                ViewModel.OnSuccessfullLoginEvent += mainViewModel.OnSuccessfullLogin;
         }
 
         private void OnSuccessfullLoginEvent(object sender, EventArgs eventArgs)
         {
             this.Close();
         }
-    }
-
-    public interface ILoginWindow
-    {
-        void Show();
     }
 }

@@ -3,14 +3,15 @@ using System.Windows.Input;
 
 namespace WebShop.WPF.Commands
 {
-    public class BasicCommand : ICommand
+    public class BasicCommand<T> : ICommand
+        where T : class
     {
-        private readonly Action _action;
+        private readonly Action<T> _action;
         private readonly Func<bool> _canExecute;
 
         public event EventHandler CanExecuteChanged;
 
-        public BasicCommand(Action action, Func<bool> canExecute = null)
+        public BasicCommand(Action<T> action, Func<bool> canExecute = null)
         {
             _action = action;
             _canExecute = canExecute;
@@ -23,12 +24,23 @@ namespace WebShop.WPF.Commands
 
         public void Execute(object parameter)
         {
-            _action?.Invoke();
+            _action?.Invoke(parameter as T);
         }
 
         public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, new EventArgs());
+        }
+    }
+
+    public class BasicCommand : BasicCommand<object>
+    {
+        public BasicCommand(Action action, Func<bool> canExecute = null)
+            : base((obj) =>
+            {
+                action();
+            }, canExecute)
+        {
         }
     }
 }
