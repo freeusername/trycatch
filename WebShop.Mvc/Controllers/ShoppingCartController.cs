@@ -8,7 +8,6 @@ using WebShop.Mvc.Helpers;
 
 namespace WebShop.Mvc.Controllers
 {
-    // TODOMove to session service
     public class ShoppingCartController : Controller
     {
         private readonly IApiProxy _apiProxy;
@@ -25,10 +24,15 @@ namespace WebShop.Mvc.Controllers
 
             if (articleIds != null && articleIds.Any())
             {
-                var articles = _apiProxy.GetArticles(articleIds.ToArray());
-                //TODO check response.StatusCode
-
-                return View(articles.Data);
+                var articlesResponse = _apiProxy.GetArticles(articleIds.ToArray());
+                if (articlesResponse.StatusCode == HttpStatusCode.OK)
+                    return View(articlesResponse.Data);
+                else if (articlesResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    return RedirectToAction("Login", "Account");
+                else
+                {
+                    throw new Exception("Internal Error. Please contact an administrator.");
+                }
             }
 
             return View("EmptyShoppingCart");
@@ -37,6 +41,7 @@ namespace WebShop.Mvc.Controllers
         [HttpGet]
         public dynamic Add(Guid id)
         {
+            //TODO Move all Session article related stuff to the separate Service
             if (Session[SessionHelper.ArticlesKeyName] == null)
             {
                 Session[SessionHelper.ArticlesKeyName] = new List<Guid> { id };
@@ -45,7 +50,7 @@ namespace WebShop.Mvc.Controllers
 
             var idsList = Session[SessionHelper.ArticlesKeyName] as List<Guid>;
             if (idsList == null)
-                throw new Exception("Smth went wrong"); //TODO
+                throw new Exception("Internal Error. Please contact an administrator.");
 
             if (!idsList.Contains(id))
                 idsList.Add(id);
@@ -68,7 +73,7 @@ namespace WebShop.Mvc.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            throw new Exception("Contact an administrator"); //TODO
+            throw new Exception("Internal Erro. Please contact an administrator");
         }
     }
 }

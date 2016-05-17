@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -32,7 +33,6 @@ namespace WebShop.Mvc.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -52,10 +52,7 @@ namespace WebShop.Mvc.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                //TODO handle it
-            }
+
             return View(model);
         }
 

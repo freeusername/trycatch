@@ -7,5 +7,10 @@ namespace WebShop.Mvc.Helpers
         {
             get { return "articles"; }
         }
+
+        public static void CleanToken()
+        {
+            
+        }
     }
 }

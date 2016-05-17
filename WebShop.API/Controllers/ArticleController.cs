@@ -50,7 +50,6 @@ namespace WebShop.Controllers
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        // TODO [Authorize]
         [Route("")]
         public IHttpActionResult GetArticles([FromUri]Guid[] ids)
         {

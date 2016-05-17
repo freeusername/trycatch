@@ -24,7 +24,7 @@ namespace WebShop.DAL.Services
         public IEnumerable<Article> GetArticles(Guid[] ids)
         {
             return _repository.GetAll()
-                .ToList() // TODO don't load everything into memory
+                .ToList() // TODO don't load everything into memory, to be refactored
                 .Where(o => ids.Contains(o.Id));
         }
 

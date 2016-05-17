@@ -28,8 +28,10 @@ namespace WebShop.Mvc.Controllers
                 });
             }
 
-            // TODO
-            throw new Exception("Smth went wrong");
+            if (articlesResponse.StatusCode == HttpStatusCode.Unauthorized)
+                return RedirectToAction("Login", "Account");
+            else
+                throw new Exception("Internal Error. Please contact an administrator");
         }
     }
 }

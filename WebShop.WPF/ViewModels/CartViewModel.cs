@@ -21,8 +21,8 @@ namespace WebShop.WPF.ViewModels
 
         public int ItemsInCart => Articles.Count;
         public decimal TotalPriceExclVat => Articles.Sum(o => o.PriceExclVat);
-        public decimal Vat => Articles.Sum(o => o.PriceExclVat * 0.2M); //TODO
-        public decimal TotalPriceInclVat => Articles.Sum(o => o.PriceExclVat * 1.2M); //TODO
+        public decimal Vat => Articles.Sum(o => o.PriceExclVat * 0.2M); //TODO use FeeCalculator class
+        public decimal TotalPriceInclVat => Articles.Sum(o => o.PriceExclVat * 1.2M); //TODO use FeeCalculator class
 
         public CartViewModel(IApiProxy proxy)
         {
