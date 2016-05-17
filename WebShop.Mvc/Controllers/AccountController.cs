@@ -76,7 +76,11 @@ namespace WebShop.Mvc.Controllers
                 var response = _apiProxy.Register(registerModel);
 
                 if (response.StatusCode == HttpStatusCode.OK)
-                    return RedirectToAction("Index", "Home");
+                    return View("SuccessfullyRegistered");
+                else
+                {
+                    throw new Exception("Internal Error. Please contact an administrator.");
+                }
             }
 
             return View(model);
