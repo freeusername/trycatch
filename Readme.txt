@@ -17,7 +17,7 @@ UI for WPF application is really poor, I concentrated on the code, sorry for tha
 Startup projects: 
 WebShop.API
 WebShop.ResourceServer
-WebShop.WPF or WebShop.MVC (two clients, can select both)
+WebShop.WPF or WebShop.MVC (two clients, both can be selected)
 
 Nuget packages must be autorestored
 Database mdf file is present in AppData folder in WebShop.API project. You can delete it and 
