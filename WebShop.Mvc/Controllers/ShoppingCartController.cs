@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using WebShop.ApiProxy;
 using WebShop.Mvc.Helpers;
 
 namespace WebShop.Mvc.Controllers
 {
+    // TODOMove to session service
     public class ShoppingCartController : Controller
     {
         private readonly IApiProxy _apiProxy;
@@ -54,8 +56,19 @@ namespace WebShop.Mvc.Controllers
         [Authorize]
         public ActionResult Checkout()
         {
-            Session.Remove(SessionHelper.ArticlesKeyName);
-            return View("SuccessfullCheckout");
+            var response = _apiProxy.Checkout(Session["token"] as string);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                Session.Remove(SessionHelper.ArticlesKeyName);
+                return View("SuccessfullCheckout");
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            throw new Exception("Contact an administrator"); //TODO
         }
     }
 }

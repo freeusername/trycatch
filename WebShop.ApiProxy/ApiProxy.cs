@@ -12,6 +12,7 @@ namespace WebShop.ApiProxy
         private const string AccountRegisterUrl = "api/Account/Register";
         private const string PagedArticlesUrl = "api/Articles/{0}/{1}"; // 0 - pageNumber, 1- pageSize
         private const string AllArticlesUrl = "api/Articles";
+        private const string CheckoutUrl = "api/Checkout";
 
         private readonly RestClient _authClient;
 
@@ -63,6 +64,16 @@ namespace WebShop.ApiProxy
             var response = _authClient.Execute<List<Article>>(request);
 
             return new CustomHttpResult<List<Article>>(response);
+        }
+
+        public ICustomHttpResult<object> Checkout(string token)
+        {
+            var request = new RestRequest(CheckoutUrl, Method.POST);
+            request.AddHeader("Authorization", "Bearer " + token);
+
+            var response = _authClient.Execute<object>(request);
+
+            return new CustomHttpResult<object>(response);
         }
     }
 }

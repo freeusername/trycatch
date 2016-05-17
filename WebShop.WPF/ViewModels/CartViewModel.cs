@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Windows;
 using WebShop.ApiProxy;
 using WebShop.DTO;
@@ -10,6 +11,7 @@ namespace WebShop.WPF.ViewModels
 {
     public class CartViewModel : NotifyPropertyObject, ICartViewModel
     {
+        private readonly IApiProxy _proxy;
         public ObservableCollection<Article> Articles { get; set; }
 
         public BasicCommand<Article> AddToCartCommand { get; set; }
@@ -24,6 +26,8 @@ namespace WebShop.WPF.ViewModels
 
         public CartViewModel(IApiProxy proxy)
         {
+            _proxy = proxy;
+
             Articles = new ObservableCollection<Article>();
             AddToCartCommand = new BasicCommand<Article>(OnAddToCart);
             CheckoutCommand = new BasicCommand(OnCheckout, () => Articles.Count > 0);
@@ -31,7 +35,11 @@ namespace WebShop.WPF.ViewModels
 
         private void OnCheckout()
         {
-            MessageBox.Show("Checkout");
+            var response = _proxy.Checkout(MainViewModel.Token);
+
+            MessageBox.Show(response.StatusCode == HttpStatusCode.Unauthorized
+                ? "Please log in the system to proceed."
+                : response.Data.ToString());
         }
 
         private void OnAddToCart(Article article)

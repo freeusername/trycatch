@@ -11,5 +11,6 @@ namespace WebShop.ApiProxy
         ICustomHttpResult Register(RegisterModel registerModel);
         ICustomHttpResult<ArticlePagedData> GetArticles(int page, int countOnPage);
         ICustomHttpResult<IEnumerable<Article>> GetArticles(Guid[] articleIds);
+        ICustomHttpResult<object> Checkout(string token);
     }
 }

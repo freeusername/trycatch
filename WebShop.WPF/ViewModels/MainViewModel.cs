@@ -12,7 +12,6 @@ namespace WebShop.WPF.ViewModels
     public class MainViewModel : NotifyPropertyObject, IMainViewModel
     {
         private readonly IApiProxy _apiProxy;
-        private string _token;
         private string _username;
         private string _title;
         private ICartViewModel _cartViewModel;
@@ -29,6 +28,8 @@ namespace WebShop.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public static string Token { get; private set; }
 
         public PagedCollection<Article> Articles
         {
@@ -104,7 +105,7 @@ namespace WebShop.WPF.ViewModels
 
         private bool IsUserLoggedIn()
         {
-            return !string.IsNullOrEmpty(_token) && !string.IsNullOrEmpty(Username);
+            return !string.IsNullOrEmpty(Token) && !string.IsNullOrEmpty(Username);
         }
 
         private void SetupCommands()
@@ -118,7 +119,7 @@ namespace WebShop.WPF.ViewModels
             LogoutCommand = new BasicCommand(() =>
             {
                 Username = null;
-                _token = null;
+                Token = null;
             }, IsUserLoggedIn);
 
             LoginCommand = new BasicCommand(() =>
@@ -151,7 +152,7 @@ namespace WebShop.WPF.ViewModels
             var loginViewModel = sender as LoginViewModel;
             if (loginViewModel != null)
             {
-                _token = loginViewModel.Token;
+                Token = loginViewModel.Token;
                 Username = loginViewModel.Email;
             }
         }
